@@ -6,7 +6,7 @@ import java.util.Objects;
 
 
 
-public final class InterestPoints {
+public final class InterestPoints<M> {
 
 	private final BiDimensionalMap<InterestPoint> points;
 	
@@ -28,9 +28,9 @@ public final class InterestPoints {
 	
 	public final long count(RectilinearRegion region,M marker) {
 		long count = 0;
-		region.getRectangles().forEach(rectangle -> {
+		for (Rectangle rectangle : region.getRectangles()) {
 			count += points.slice(rectangle).CollectionSize(a -> a.hasMarker(marker));
-		});
+		}
 		return count;
 	}
 	
