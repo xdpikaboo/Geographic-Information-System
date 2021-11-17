@@ -35,7 +35,7 @@ public final class RectilinearRegion {
 	public boolean isOverlapping() {
 		BiDimensionalMap<Rectangle> map = this.rectangleMap();
 		for (Coordinate coordinate : map.coordinateSet()) {
-			if (map.get(coordinate).size() > 1) {
+			if (map.get(coordinate).size() > 2) {
 				return true;
 			}
 		}
@@ -55,7 +55,7 @@ public final class RectilinearRegion {
 	}
 	
 	public boolean isConnected() {
-		if(isOverlapping()) {
+		if(isOverlapping() || rectangles.size() == 0) {
 			return false;
 		}
 		visited = new HashSet<>();
