@@ -218,17 +218,25 @@ public class RectilinearRegionTest {
 	}
 	
 	//Overlapping rectangles
-	@Test
+	@Test(expected = IllegalStateException.class)
 	public void testIsConnected4() {
 		Coordinate c1 = new Coordinate(new BigDecimal(0),new BigDecimal(0));  //left bot
-		Coordinate c2 = new Coordinate(new BigDecimal(2),new BigDecimal(2));  //right top		
-		Coordinate c3 = new Coordinate(new BigDecimal(1),new BigDecimal(1));  //left bot
-		Coordinate c4 = new Coordinate(new BigDecimal(2),new BigDecimal(2));  //right top
+		Coordinate c2 = new Coordinate(new BigDecimal(2),new BigDecimal(1));  //right top		
+		Coordinate c3 = new Coordinate(new BigDecimal(1),new BigDecimal(0));  //left bot
+		Coordinate c4 = new Coordinate(new BigDecimal(3),new BigDecimal(1));  //right top
 		Rectangle r1 = new Rectangle(c1, c2);
 		Rectangle r2 = new Rectangle(c3, c4);
 		Set<Rectangle> rectangles = new HashSet<Rectangle>();
 		rectangles.add(r1);
 		rectangles.add(r2);
+		RectilinearRegion test = RectilinearRegion.of(rectangles);
+		test.isConnected();
+	}
+	
+	//null rectangles
+	@Test(expected = NullPointerException.class)
+	public void testIsConnected5() {
+		Set<Rectangle> rectangles = null;
 		RectilinearRegion test = RectilinearRegion.of(rectangles);
 		assertFalse(test.isConnected());
 	}
@@ -238,8 +246,8 @@ public class RectilinearRegionTest {
 	public void StressTest() {
 		Set<Rectangle> rectangles = new HashSet<Rectangle>();
 		for (int i = 0; i < 1000; i++) {
-			Coordinate c1 = new Coordinate(new BigDecimal(i),new BigDecimal(i));  //left bot
-			Coordinate c2 = new Coordinate(new BigDecimal(i+1),new BigDecimal(i+1));  //right top		
+			Coordinate c1 = new Coordinate(new BigDecimal(i),new BigDecimal(0));  //left bot
+			Coordinate c2 = new Coordinate(new BigDecimal(i+1),new BigDecimal(1)); //right top		
 			Rectangle r1 = new Rectangle(c1, c2);
 			rectangles.add(r1);
 		}

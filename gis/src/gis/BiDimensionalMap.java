@@ -109,7 +109,7 @@ public final class BiDimensionalMap<T> {
 	}
 	
 	public String toString() {
-		return("The size of the map is " + this.collectionSize() + " . Here is a list of the store values: " + this.coordinateSet());
+		return("Map Size " + this.collectionSize() + " .Values: " + this.coordinateSet());
 	}
 	
 	public final Updater getUpdater() {

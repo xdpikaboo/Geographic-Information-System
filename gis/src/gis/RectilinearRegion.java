@@ -35,7 +35,7 @@ public final class RectilinearRegion {
 	public boolean isOverlapping() {
 		BiDimensionalMap<Rectangle> map = this.rectangleMap();
 		for (Coordinate coordinate : map.coordinateSet()) {
-			if (map.get(coordinate).size() > 2) {
+			if (map.get(coordinate).size() > 1) {
 				return true;
 			}
 		}
@@ -43,10 +43,12 @@ public final class RectilinearRegion {
 	}
 
 	public static final RectilinearRegion of(Set<Rectangle> rectangles) {
-		if (Objects.requireNonNull(rectangles).contains(null)) throw new NullPointerException("rectangles contains a null Rectangle");
+		if (Objects.requireNonNull(rectangles).contains(null)) {
+			throw new NullPointerException("rectangles contains a null Rectangle");
+		}
 		RectilinearRegion rect = new RectilinearRegion(rectangles);
 		if (rect.isOverlapping()) {
-			throw new IllegalStateException("The RectilinearRegion contains overlapping rectangles");
+			throw new IllegalStateException("the region contains overlapping rectangles");
 		}
 		else {
 			return rect;
@@ -55,7 +57,7 @@ public final class RectilinearRegion {
 	}
 	
 	public boolean isConnected() {
-		if(isOverlapping() || rectangles.size() == 0) {
+		if(rectangles.size() == 0) {
 			return false;
 		}
 		visited = new HashSet<>();
