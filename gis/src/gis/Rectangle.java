@@ -6,7 +6,9 @@ import java.util.Objects;
 public record Rectangle(Coordinate bottomLeft,Coordinate topRight) {
 
 	public final Rectangle validate() {
-		if ((bottomLeft.validate().getX().compareTo(topRight.validate().getX()) >= 0) || (bottomLeft.getY().compareTo(topRight.getY()) >= 0)){
+		Coordinate.validate(bottomLeft);
+		Coordinate.validate(topRight);
+		if ((bottomLeft.x().compareTo(topRight.x()) >= 0) || (bottomLeft.y().compareTo(topRight.y()) >= 0)){
 			throw new IllegalArgumentException("bottomLeft is not smaller than topRight");
 		}
 		return this;

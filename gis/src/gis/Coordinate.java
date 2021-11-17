@@ -8,9 +8,8 @@ public record Coordinate(BigDecimal x, BigDecimal y) implements Comparable<Coord
 	public static final Coordinate origin = new Coordinate(new BigDecimal(0),new BigDecimal(0));
 	
 	public final Coordinate validate() {
-		if (x == null || y == null) {
-			throw new NullPointerException("x or/and y is null");
-		}
+		Objects.requireNonNull(x);
+		Objects.requireNonNull(y);
 		return this;
 	}
 	
@@ -33,11 +32,4 @@ public record Coordinate(BigDecimal x, BigDecimal y) implements Comparable<Coord
 			}
 	}
 	
-	public BigDecimal getX() {
-		return this.x;
-	}
-	
-	public BigDecimal getY() {
-		return this.y;
-	}
 }

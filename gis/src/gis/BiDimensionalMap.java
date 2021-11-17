@@ -21,9 +21,8 @@ public final class BiDimensionalMap<T> {
 	
 	BiDimensionalMap(Collection<BigDecimal> xCoord, Collection<BigDecimal> yCoord) {
 		for (BigDecimal x : Objects.requireNonNull(xCoord)) {
-			this.getUpdater().getMap();
 			for (BigDecimal y : Objects.requireNonNull(yCoord)) {
-				points.get(x).put(y, new HashSet<T>());	
+				this.getUpdater().setCoordinate(new Coordinate(x, y)).set();
 			}
 		}
 	}
@@ -39,16 +38,16 @@ public final class BiDimensionalMap<T> {
 	}
 	
 	public final Collection<T> get(BigDecimal x, BigDecimal y) {
-		Coordinate.validate(new Coordinate(x, y));
-		if (points.get(x) == null) {
-			return null;
-		} else  {
-			return points.get(x).get(y);
-		}
+		return get(new Coordinate(x, y));
 	}
 	
 	public final Collection<T> get(Coordinate coordinate) {
-		return this.get(coordinate.validate());
+		Coordinate.validate(coordinate);
+		if (points.get(coordinate.x()) == null) {
+			return null;
+		} else  {
+			return points.get(coordinate.x()).get(coordinate.y());
+		}
 	} 
 	
 	public final Set<BigDecimal> xSet() {
@@ -81,10 +80,10 @@ public final class BiDimensionalMap<T> {
 	}
 	
 	public final long collectionSize() {
-		return this.CollectionSize(value -> true);
+		return this.collectionSize(value -> true);
 	}
 	
-	public final long CollectionSize(Predicate<? super T> filter) {
+	public final long collectionSize(Predicate<? super T> filter) {
 		long size = 0;
 		for (Collection<T> list : collectionList()) {
 			for (T value : list) {
@@ -98,12 +97,12 @@ public final class BiDimensionalMap<T> {
 	}
 	
 	public final BiDimensionalMap<T> slice(Rectangle rectangle) {
-		Objects.requireNonNull(rectangle).validate();
 		BiDimensionalMap<T> rect = new BiDimensionalMap<>();
-		SortedMap<BigDecimal, SortedMap<BigDecimal, Collection<T>>> map1 = points.subMap(rectangle.left(), rectangle.right());
-		map1.forEach((x, map2) ->  { 
-			map2.subMap(rectangle.bottom(), rectangle.top()).forEach((y, col) -> {
-				rect.points.get(x).put(y, points.get(x).get(y));
+		SortedMap<BigDecimal, SortedMap<BigDecimal, Collection<T>>> xCoord = this.points.subMap(Rectangle.validate(rectangle).left(), rectangle.right());
+		xCoord.forEach((x, yCoord) ->  { 
+			rect.points.put(x, new TreeMap<>()); 
+			yCoord.subMap(rectangle.bottom(), rectangle.top()).forEach((y, collection) -> {
+				rect.points.get(x).put(y, this.points.get(x).get(y));
 			});
 		});
 		return rect;
@@ -131,7 +130,13 @@ public final class BiDimensionalMap<T> {
 		}
 		
 		public final Collection<T> set() {
-			return points.get(this.x).put(y, this.getCollection());
+			points.computeIfAbsent(this.x, k -> {
+				SortedMap<BigDecimal, Collection<T>> map = new TreeMap<>();
+				return map;
+			});
+			Collection<T> collection = collectionFactory.get();
+			collection.addAll(values);
+			return points.get(this.x).put(y, collection);
 		}
 
 		public final boolean add() {

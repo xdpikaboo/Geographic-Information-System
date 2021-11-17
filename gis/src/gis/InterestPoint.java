@@ -1,18 +1,17 @@
 package gis;
 
+import java.util.Objects;
+
 public record InterestPoint<M>(Coordinate coordinate,M marker) {	
 	
 	public final InterestPoint validate() {
-		if (this.marker == null) {
-			throw new NullPointerException("marker is null");
-		}
+		Objects.requireNonNull(this.coordinate);
+		Objects.requireNonNull(this.marker);
 		return this;
 	}
 	
 	public static final InterestPoint validate(InterestPoint interestPoint) {
-		if (interestPoint == null) {
-			throw new NullPointerException("interest point is null");
-		}
+		Objects.requireNonNull(interestPoint);
 		return interestPoint.validate();
 	}
 	

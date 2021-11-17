@@ -15,7 +15,7 @@ public final class InterestPoints<M> {
 	}
 	
 	public final Collection<InterestPoint> get(Coordinate coordinate) {
-		return points.get(Objects.requireNonNull(coordinate).validate());
+		return points.get(Coordinate.validate(coordinate));
 	}
 	
 	public final List<Collection<InterestPoint>> interestPoints() {
@@ -29,7 +29,7 @@ public final class InterestPoints<M> {
 	public final long count(RectilinearRegion region,M marker) {
 		long count = 0;
 		for (Rectangle rectangle : region.getRectangles()) {
-			count += points.slice(rectangle).CollectionSize(a -> a.hasMarker(marker));
+			count += points.slice(rectangle).collectionSize(a -> a.hasMarker(marker));
 		}
 		return count;
 	}
